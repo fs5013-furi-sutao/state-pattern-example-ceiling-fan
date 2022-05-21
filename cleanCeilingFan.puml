@@ -1,0 +1,77 @@
+@startuml cleanCeilingFan
+package Stateパターンを使ったCeilingFan {
+    package clean {
+
+        class App {
+            - {static} STDIN : Scanner {readOnly}
+            - {static} MSG_PRESS_ENTER : String {readOnly}
+            - {static} BREAK_LINE : String {readOnly}
+            ---
+            + {static} main(String... args) : void
+            ---
+            - {static} spendLife(CeilingFanPullChain chain) : void
+            - {static} show(String message) : void
+            - {static} recieveInputtedEnterKey() : String
+        }
+
+        class CeilingFanPullChain {
+            - currentState : SpeedState
+            ---
+            + CeilingFanPullChain()
+            ---
+            + setSpeedState(SpeedState state) : void
+            + pull() : void
+        }
+
+        package state {
+            package constant {
+                enum SpeedStateType {
+                    - {static} nameJa {readOnly}
+                    ---
+                    - SpeedStateType(String nameJa)
+                    ---
+                    + nameJa() : String
+                    + showNameJa() : void
+                }
+            }
+
+            interface SpeedState {
+                + pull(CeilingFanPullChain wrapper) : void
+            }
+
+            class Off {
+                - {static} SpeedStateType STATE {readOnly}
+                + pull(CeilingFanPullChain wrapper) : void
+            }
+
+            class Low {
+                - {static} SpeedStateType STATE {readOnly}
+                + pull(CeilingFanPullChain wrapper) : void
+            }
+
+            class Medium {
+                - {static} SpeedStateType STATE {readOnly}
+                + pull(CeilingFanPullChain wrapper) : void
+            }
+
+            class High {
+                - {static} SpeedStateType STATE {readOnly}
+                + pull(CeilingFanPullChain wrapper) : void
+            }
+        }
+    }
+}
+
+App .> CeilingFanPullChain :use
+CeilingFanPullChain ..> SpeedState : delegate
+
+SpeedState <|-- Off :implements
+SpeedState <|-- Low :implements
+SpeedState <|-- Medium :implements
+SpeedState <|-- High :implements
+
+Off ..> SpeedStateType :delegate
+Low ..> SpeedStateType :delegate
+Medium ..> SpeedStateType :delegate
+High ..> SpeedStateType :delegate
+@enduml
